@@ -1,47 +1,53 @@
 [package]
-name          = "qbit-rs"
-version       = "0.4.6"
-edition       = "2021"
-license       = "MIT"
-description   = "A Rust library for interacting with qBittorrent's Web API"
-readme        = "README.md"
+name = "qbit-rs"
+version = "0.4.6"
+edition = "2021"
+license = "MIT"
+description = "A Rust library for interacting with qBittorrent's Web API"
+readme = "README.md"
 documentation = "https://docs.rs/qbit-rs"
-repository    = "https://github.com/George-Miao/qbit"
-homepage      = "https://github.com/George-Miao/qbit"
-authors       = ["George Miao <gm@miao.dev>"]
-keywords      = ["qbit", "qBittorrent", "web", "api", "torrent"]
-categories    = ["network-programming"]
+repository = "https://github.com/George-Miao/qbit"
+homepage = "https://github.com/George-Miao/qbit"
+authors = ["George Miao <gm@miao.dev>"]
+keywords = ["qbit", "qBittorrent", "web", "api", "torrent"]
+categories = ["network-programming"]
 
 [package.metadata.docs.rs]
-features     = ["docs"]
+features = ["docs"]
 rustdoc-args = ["--cfg", "feature=\"docs\""]
 
 [features]
-default    = ["builder", "native-tls"]
+default = ["builder", "native-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 native-tls = ["reqwest/default-tls"]
-docs       = []
+docs = []
 
 # enables typed-builder on args types
 builder = ["dep:typed-builder"]
 
 [dependencies]
-typed-builder = { version = "0.18.2", optional = true }
-serde         = { version = "1.0.202", features = ["derive"] }
-reqwest       = { version = "0.12.4", default-features = false, features = ["charset", "http2", "macos-system-configuration", "json", "multipart"] }
-url           = { version = "2.5.0", features = ["serde"] }
+typed-builder = { version = "0.20", optional = true }
+serde = { version = "1", features = ["derive"] }
+reqwest = { version = "0.12", default-features = false, features = [
+  "charset",
+  "http2",
+  "macos-system-configuration",
+  "json",
+  "multipart",
+] }
+url = { version = "2", features = ["serde"] }
 
-mod_use     = "0.2.1"
-serde-value = "0.7.0"
-serde_repr  = "0.1.19"
-serde_with  = "2.3.3"
-tap         = "1.0.1"
-thiserror   = "1.0.61"
-tracing     = "0.1.40"
-serde_json  = "1.0.117"
-bytes       = "1.6.0"
+mod_use = "0.2"
+serde-value = "0.7"
+serde_repr = "0.1"
+serde_with = "3"
+tap = "1"
+thiserror = "2"
+tracing = "0.1.40"
+serde_json = "1"
+bytes = "1"
 [dev-dependencies]
-tokio = { version = "1.27.0", features = ["full"] }
+tokio = { version = "1", features = ["full"] }
 
-dotenv             = "0.15.0"
-tracing-subscriber = "0.3.16"
+dotenv = "0.15"
+tracing-subscriber = "0.3"
