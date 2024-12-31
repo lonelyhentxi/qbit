@@ -4,7 +4,7 @@ use serde_value::Value;
 
 use crate::model::{Category, Torrent};
 
-#[derive(Debug, Clone, serde::Deserialize, PartialEq)]
+#[derive(Debug, Clone, serde::Deserialize, PartialEq, serde::Serialize)]
 pub struct SyncData {
     /// Response ID
     pub rid: i64,
@@ -31,7 +31,7 @@ pub struct SyncData {
     pub server_state: Option<HashMap<String, Value>>,
 }
 
-#[derive(Debug, Clone, serde::Deserialize, PartialEq)]
+#[derive(Debug, Clone, serde::Deserialize, PartialEq, serde::Serialize)]
 pub struct PeerSyncData {
     pub full_update: Option<bool>,
     pub peers: Option<HashMap<SocketAddr, Peer>>,
@@ -39,7 +39,7 @@ pub struct PeerSyncData {
     pub rid: i64,
     pub show_flags: bool,
 }
-#[derive(Debug, Clone, serde::Deserialize, PartialEq)]
+#[derive(Debug, Clone, serde::Deserialize, PartialEq, serde::Serialize)]
 pub struct Peer {
     pub client: Option<String>,
     pub connection: Option<String>,

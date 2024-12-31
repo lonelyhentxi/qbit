@@ -13,7 +13,7 @@ use std::{
 pub mod model;
 pub use builder::QbitBuilder;
 use bytes::Bytes;
-use reqwest::{header, Client, Method, Response, StatusCode};
+use reqwest::{Client, Method, Response, StatusCode, header};
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use tap::{Pipe, TapFallible};
@@ -207,12 +207,9 @@ impl Qbit {
             last_known_id: Option<i64>,
         }
 
-        self.get_with(
-            "log/peers",
-            &Arg {
-                last_known_id: last_known_id.into(),
-            },
-        )
+        self.get_with("log/peers", &Arg {
+            last_known_id: last_known_id.into(),
+        })
         .await?
         .json()
         .await
@@ -244,13 +241,10 @@ impl Qbit {
             rid: Option<i64>,
         }
 
-        self.get_with(
-            "sync/torrentPeers",
-            &Arg {
-                hash: hash.as_ref(),
-                rid: rid.into(),
-            },
-        )
+        self.get_with("sync/torrentPeers", &Arg {
+            hash: hash.as_ref(),
+            rid: rid.into(),
+        })
         .await
         .and_then(|r| r.map_status(TORRENT_NOT_FOUND))?
         .json()
@@ -282,7 +276,9 @@ impl Qbit {
     }
 
     pub async fn toggle_speed_limits_mode(&self) -> Result<()> {
-        self.post("transfer/toggleSpeedLimitsMode", None::<&()>).await?.end()
+        self.post("transfer/toggleSpeedLimitsMode", None::<&()>)
+            .await?
+            .end()
     }
 
     pub async fn get_download_limit(&self) -> Result<u64> {
@@ -413,13 +409,10 @@ impl Qbit {
             indexes: Option<String>,
         }
 
-        self.get_with(
-            "torrents/files",
-            &Arg {
-                hash: hash.as_ref(),
-                indexes: indexes.into().map(|s| s.to_string()),
-            },
-        )
+        self.get_with("torrents/files", &Arg {
+            hash: hash.as_ref(),
+            indexes: indexes.into().map(|s| s.to_string()),
+        })
         .await
         .and_then(|r| r.map_status(TORRENT_NOT_FOUND))?
         .json()
@@ -515,9 +508,10 @@ impl Qbit {
                             .unwrap()
                             .into_iter()
                             .fold(reqwest::multipart::Form::new(), |form, (k, v)| {
-                                // If we directly call to_string() on a Value containing a string like "hello",
-                                // it will include the quotes: "\"hello\"".
-                                // We need to use as_str() first to get the inner string without quotes.
+                                // If we directly call to_string() on a Value containing a string
+                                // like "hello", it will include the
+                                // quotes: "\"hello\"". We need to
+                                // use as_str() first to get the inner string without quotes.
                                 let v = match v.as_str() {
                                     Some(v_str) => v_str.to_string(),
                                     None => v.to_string(),
@@ -1425,6 +1419,10 @@ impl Qbit {
                             .as_credential()
                             .expect("Credential should be set if cookie is not set"),
                     )
+                })
+                .pipe(|req| {
+                    tracing::error!(request = ?req, "Sending login request");
+                    req
                 })
                 .send()
                 .await?
